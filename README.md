@@ -1,20 +1,16 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Fenix Trading Academy - Premium Funnel 🦅
 
-# Run and deploy your AI Studio app
+Este es el repositorio central del sistema de ventas y captación de leads desarrollado para **Fenix Trading Academy**.
 
-This contains everything you need to run your app locally.
+## Características del Ecosistema
+- **VSL Academy:** Landing page de alta conversión con reproductor de video profesional.
+- **Trading Bot Landing:** Sección especializada para la captación de leads interesados en algoritmos.
+- **Sistema de Gestión (CRM):** Panel privado integrado con Google Sheets para el seguimiento de prospectos en tiempo real.
+- **Estructura SEO:** Optimización técnica completa, sitemaps y metadatos para posicionamiento orgánico.
+- **Performance:** Arquitectura ligera basada en Vite y Tailwind CSS para carga instantánea.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1u5d2-b9EtMFdQxFPbheKS0lB_5OnRFrX
+## Desarrollo
+Proyecto diseñado y desarrollado integralmente por **Gastón López**.
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+© 2026 Fenix Trading Academy.

@@ -53,6 +53,6 @@ Como profesional, he realizado una valoración objetiva de este sistema consider
 ---
 
 **Estado del Proyecto:** 100% Funcional y listo para el despliegue.
-**Desarrollado para:** Fenix Trading Academy
-**Desarrollado por:** Gastón López - Bright Idea
+**Desarrollado por:** Gastón López
+**Para:** Fenix Trading Academy
 **Fecha:** 07 de Enero, 2026
