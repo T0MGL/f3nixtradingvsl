@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+# Reemplaza con tu dominio real
+Sitemap: https://fenixacademy.com/sitemap.xml

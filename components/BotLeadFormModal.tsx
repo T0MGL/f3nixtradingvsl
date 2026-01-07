@@ -1,0 +1,509 @@
+import React, { useState, useEffect } from 'react';
+import { X, ChevronRight, CheckCircle, Lock, Smartphone, Brain, TrendingUp, User, ArrowLeft, Target, Clock, Wallet, Coins, Briefcase, Gem, MessageCircle } from 'lucide-react';
+import { submitLead } from '../services/sheetApi';
+import { trackEvent } from '../utils/metaPixel';
+
+interface BotLeadFormModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+// Tarjeta de Selección
+const SelectionCard = ({
+    icon: Icon,
+    title,
+    subtitle,
+    selected,
+    onClick,
+    specialIconStyle = false
+}: {
+    icon: any,
+    title: string,
+    subtitle?: string,
+    selected: boolean,
+    onClick: () => void,
+    specialIconStyle?: boolean
+}) => (
+    <button
+        type="button"
+        onClick={onClick}
+        className={`w-full text-left p-4 md:p-5 rounded-xl border transition-all duration-300 group relative overflow-hidden ${selected
+            ? 'bg-amber-500/10 border-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.2)] scale-[1.02]'
+            : 'bg-zinc-900/50 border-white/5 hover:border-white/20 hover:bg-zinc-800'
+            }`}
+    >
+        <div className="flex items-center gap-4 relative z-10">
+            <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 transition-colors ${selected
+                ? 'bg-amber-500 text-black'
+                : specialIconStyle
+                    ? 'bg-gradient-to-br from-green-900/40 to-emerald-900/40 border border-green-500/20 text-green-500 group-hover:border-green-400'
+                    : 'bg-zinc-800 text-gray-400 group-hover:bg-zinc-700'
+                }`}>
+                <Icon size={20} />
+            </div>
+            <div className="flex-1">
+                <h4 className={`font-bold text-sm md:text-base ${selected ? 'text-amber-500' : 'text-white group-hover:text-white'}`}>
+                    {title}
+                </h4>
+                {subtitle && (
+                    <p className="text-[11px] md:text-xs text-gray-500 mt-1 leading-tight group-hover:text-gray-400">
+                        {subtitle}
+                    </p>
+                )}
+            </div>
+            {selected && (
+                <div className="bg-amber-500 rounded-full p-1 animate-scale-in">
+                    <CheckCircle size={16} className="text-black" />
+                </div>
+            )}
+        </div>
+    </button>
+);
+
+// Componente de Nota del Mentor
+const MentorNote = ({ text, type = "info" }: { text: string, type?: "info" | "alert" }) => (
+    <div className={`
+        mb-5 flex gap-3 items-start p-3 rounded-lg border-l-2 animate-fade-in
+        ${type === 'info' ? 'bg-blue-500/5 border-blue-500/40' : 'bg-amber-500/5 border-amber-500/40'}
+    `}>
+        <div className={`mt-0.5 shrink-0 ${type === 'info' ? 'text-blue-400' : 'text-amber-400'}`}>
+            {type === 'info' ? <MessageCircle size={16} /> : <Lock size={16} />}
+        </div>
+        <div>
+            <p className={`text-xs leading-relaxed font-medium ${type === 'info' ? 'text-blue-100/90' : 'text-amber-100/90'}`}>
+                <span className="opacity-50 text-[10px] uppercase tracking-wider font-bold block mb-1">
+                    {type === 'info' ? 'Nota del Instructor:' : 'Confidencial:'}
+                </span>
+                "{text}"
+            </p>
+        </div>
+    </div>
+);
+
+export const BotLeadFormModal: React.FC<BotLeadFormModalProps> = ({ isOpen, onClose }) => {
+    const [step, setStep] = useState(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+
+    const TOTAL_STEPS = 5;
+
+    const [formData, setFormData] = useState({
+        name: '',
+        phone: '',
+        experience: '',
+        capital: '',
+        time: '',
+        goal: ''
+    });
+
+    // Reset al abrir
+    useEffect(() => {
+        if (isOpen) {
+            setStep(1);
+            setIsSuccess(false);
+            setIsAnalyzing(false);
+            setFormData({ name: '', phone: '', experience: '', capital: '', time: '', goal: '' });
+        }
+    }, [isOpen]);
+
+    if (!isOpen) return null;
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/\D/g, '');
+        setFormData({ ...formData, phone: value });
+    };
+
+    const handleSelection = (field: string, value: string) => {
+        setFormData({ ...formData, [field]: value });
+        setTimeout(() => {
+            if (step < TOTAL_STEPS) {
+                setStep(step + 1);
+            }
+        }, 250);
+    };
+
+    const handleBack = () => {
+        if (step > 1) setStep(step - 1);
+    };
+
+    const handleNext = () => {
+        if (step === TOTAL_STEPS - 1) {
+            setIsAnalyzing(true);
+            setTimeout(() => {
+                setIsAnalyzing(false);
+                setStep(step + 1);
+            }, 2000);
+        } else {
+            if (step < TOTAL_STEPS) setStep(step + 1);
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        const finalData = {
+            ...formData,
+            phone: `+${formData.phone}`,
+            offer: 'AI Bot $997' // Producto específico del bot
+        };
+
+        const success = await submitLead(finalData);
+
+        setIsSubmitting(false);
+        if (success) {
+            setIsSuccess(true);
+
+            // Tracking de compra con valor de $997
+            trackEvent('Purchase', {
+                value: 997.00,
+                currency: 'USD',
+                content_name: 'AI Bot $997',
+                content_type: 'product',
+                num_items: 1,
+                lead_experience: formData.experience,
+                lead_capital: formData.capital
+            });
+        }
+    };
+
+    const getHeaderInfo = () => {
+        switch (step) {
+            case 1: return { title: "Evaluación de Perfil", subtitle: "Vamos a ver si calificas para el Protocolo Fenix Auto." };
+            case 2: return { title: "Disponibilidad", subtitle: "El bot funciona 24/7, pero necesitamos tu contexto." };
+            case 3: return { title: "Recursos Disponibles", subtitle: "Para determinar el tamaño de cuenta recomendada." };
+            case 4: return { title: "Tus Datos", subtitle: "Para activar tu licencia anual." };
+            case 5: return { title: "Tu Objetivo", subtitle: "Confirma tu meta con el sistema." };
+            default: return { title: "", subtitle: "" };
+        }
+    };
+
+    const getTimeFeedback = () => {
+        if (formData.experience === 'Novato') return "El Protocolo Fenix Auto es ideal para principiantes: no requiere conocimiento previo. El bot opera por ti mientras aprendes.";
+        if (formData.experience === 'Intermedio') return "Si has perdido antes operando manualmente, el bot elimina la variable emocional. Deja que el algoritmo ejecute sin interferencia.";
+        if (formData.experience === 'Avanzado') return "Traders avanzados usan nuestro bot para diversificar su portafolio con una estrategia complementaria automatizada 24/7.";
+        return "El bot opera mientras tú duermes, trabajas o haces cualquier otra cosa. Totalmente pasivo.";
+    };
+
+    const headerInfo = getHeaderInfo();
+
+    return (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <div
+                className="absolute inset-0 bg-black/95 backdrop-blur-xl transition-opacity animate-fade-in"
+                onClick={onClose}
+            ></div>
+
+            <div className="relative w-full max-w-lg flex flex-col max-h-[90vh]">
+
+                {/* Barra de Progreso */}
+                {!isSuccess && !isAnalyzing && (
+                    <div className="mb-6 flex items-center gap-3 px-1">
+                        <div className="flex-1 h-1 bg-zinc-800 rounded-full overflow-hidden">
+                            <div
+                                className="h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(245,158,11,0.5)] bg-gradient-to-r from-amber-600 to-amber-400"
+                                style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+                            ></div>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-500">Paso {step}/{TOTAL_STEPS}</span>
+                    </div>
+                )}
+
+                <div className="bg-[#050505] border border-white/10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,1)] overflow-hidden flex flex-col relative min-h-[480px]">
+
+                    {/* Fondo Decorativo */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 blur-[100px] pointer-events-none rounded-full" />
+
+                    {/* Header del Modal */}
+                    {!isAnalyzing && !isSuccess && (
+                        <div className="flex justify-between items-start p-6 pb-0 relative z-10">
+                            <div>
+                                {step > 1 && (
+                                    <button type="button" onClick={handleBack} className="text-gray-600 hover:text-white transition-colors flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider mb-2">
+                                        <ArrowLeft size={12} /> Anterior
+                                    </button>
+                                )}
+                                <h2 className="text-2xl font-bold text-white leading-none mb-1">{headerInfo.title}</h2>
+                                <p className="text-gray-500 text-sm font-light">{headerInfo.subtitle}</p>
+                            </div>
+                            <button type="button" onClick={onClose} className="bg-white/5 hover:bg-white/10 p-2 rounded-full text-gray-400 hover:text-white transition-colors">
+                                <X size={20} />
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Contenido Dinámico */}
+                    <div className="p-6 md:p-8 pt-6 overflow-y-auto relative z-10 flex-1 flex flex-col justify-center">
+
+                        {isAnalyzing ? (
+                            // Loading Screen
+                            <div className="text-center animate-pulse flex flex-col items-center">
+                                <div className="w-16 h-16 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin mb-6"></div>
+                                <h3 className="text-xl font-bold text-white mb-2">Validando disponibilidad...</h3>
+                                <p className="text-gray-400 text-sm">Verificando cupos para licencias anuales...</p>
+                                <div className="mt-8 space-y-2 w-full max-w-xs mx-auto">
+                                    <div className="flex justify-between text-xs text-gray-500"><span>Experiencia</span> <span className="text-green-500">✓ Válido</span></div>
+                                    <div className="flex justify-between text-xs text-gray-500"><span>Capital</span> <span className="text-green-500">✓ Válido</span></div>
+                                    <div className="flex justify-between text-xs text-gray-500"><span>Cupos</span> <span className="text-amber-500">Limitado</span></div>
+                                </div>
+                            </div>
+                        ) : isSuccess ? (
+                            // Success Screen
+                            <div className="text-center py-4 animate-slide-up-fade">
+                                <div className="w-20 h-20 bg-gradient-to-br from-green-500/20 to-emerald-900/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/30 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                                    <CheckCircle size={40} className="text-green-500" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-white mb-2">¡Solicitud Exitosa!</h3>
+
+                                <div className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-gray-400 mb-4">
+                                    Licencia Fenix Auto: <span className="text-amber-400 font-bold">$997 USD/año</span>
+                                </div>
+
+                                <div className="bg-white/5 rounded-xl p-4 mb-6 border border-white/10 text-left">
+                                    <p className="text-gray-300 text-sm mb-2">
+                                        Tu solicitud ha sido recibida.
+                                    </p>
+                                    <p className="text-gray-400 text-xs">
+                                        Un especialista revisará tu perfil y te contactará: <span className="text-white font-mono block mt-1 bg-black/30 p-2 rounded">+{formData.phone}</span>
+                                    </p>
+                                </div>
+                                <p className="text-amber-500 text-xs animate-pulse mb-6 font-bold uppercase tracking-widest">
+                                    ⚠️ Mantente atento a tu WhatsApp
+                                </p>
+                                <button
+                                    onClick={onClose}
+                                    className="w-full gold-gradient-bg text-black font-bold py-4 rounded-xl hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
+                                >
+                                    Entendido, estaré atento
+                                </button>
+                            </div>
+                        ) : (
+                            // Normal Form
+                            <form onSubmit={handleSubmit} className="w-full">
+
+                                {/* STEP 1: EXPERIENCE */}
+                                {step === 1 && (
+                                    <div className="space-y-3 animate-slide-up-fade">
+                                        <SelectionCard
+                                            icon={Brain}
+                                            title="Novato / Desde Cero"
+                                            subtitle="No tengo experiencia con bots de trading."
+                                            selected={formData.experience === 'Novato'}
+                                            onClick={() => handleSelection('experience', 'Novato')}
+                                        />
+                                        <SelectionCard
+                                            icon={TrendingUp}
+                                            title="Intermedio / He Perdido"
+                                            subtitle="Perdí operando manualmente, busco alternativa automatizada."
+                                            selected={formData.experience === 'Intermedio'}
+                                            onClick={() => handleSelection('experience', 'Intermedio')}
+                                        />
+                                        <SelectionCard
+                                            icon={Target}
+                                            title="Avanzado / Diversificación"
+                                            subtitle="Busco agregar trading automatizado a mi portafolio."
+                                            selected={formData.experience === 'Avanzado'}
+                                            onClick={() => handleSelection('experience', 'Avanzado')}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* STEP 2: TIME */}
+                                {step === 2 && (
+                                    <div className="space-y-3 animate-slide-up-fade">
+                                        <MentorNote
+                                            text={getTimeFeedback()}
+                                            type="info"
+                                        />
+
+                                        <SelectionCard
+                                            icon={Clock}
+                                            title="Tiempo completo disponible"
+                                            subtitle="Puedo monitorear el bot regularmente."
+                                            selected={formData.time === 'Tiempo Completo'}
+                                            onClick={() => handleSelection('time', 'Tiempo Completo')}
+                                        />
+                                        <SelectionCard
+                                            icon={Clock}
+                                            title="Medio tiempo"
+                                            subtitle="Revisaré el bot 1-2 veces al día."
+                                            selected={formData.time === 'Medio Tiempo'}
+                                            onClick={() => handleSelection('time', 'Medio Tiempo')}
+                                        />
+                                        <SelectionCard
+                                            icon={Clock}
+                                            title="Completamente pasivo"
+                                            subtitle="Solo quiero resultados, sin monitoreo diario."
+                                            selected={formData.time === 'Pasivo'}
+                                            onClick={() => handleSelection('time', 'Pasivo')}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* STEP 3: CAPITAL */}
+                                {step === 3 && (
+                                    <div className="space-y-3 animate-slide-up-fade">
+                                        <MentorNote
+                                            text="El bot requiere una cuenta de trading propia (ej: Binance). ¿Con cuánto capital planeas empezar?"
+                                            type="alert"
+                                        />
+
+                                        <div className="grid gap-3">
+                                            <SelectionCard
+                                                icon={Coins}
+                                                title="$500 - $2,000 USD"
+                                                subtitle="Cuenta pequeña para empezar conservador."
+                                                selected={formData.capital === '$500 - $2,000'}
+                                                onClick={() => handleSelection('capital', '$500 - $2,000')}
+                                                specialIconStyle={true}
+                                            />
+                                            <SelectionCard
+                                                icon={Wallet}
+                                                title="$2,000 - $10,000 USD"
+                                                subtitle="Capital moderado para crecimiento sostenido."
+                                                selected={formData.capital === '$2,000 - $10,000'}
+                                                onClick={() => handleSelection('capital', '$2,000 - $10,000')}
+                                                specialIconStyle={true}
+                                            />
+                                            <SelectionCard
+                                                icon={Briefcase}
+                                                title="$10,000 - $50,000 USD"
+                                                subtitle="Capital serio para resultados significativos."
+                                                selected={formData.capital === '$10,000 - $50,000'}
+                                                onClick={() => handleSelection('capital', '$10,000 - $50,000')}
+                                                specialIconStyle={true}
+                                            />
+                                            <SelectionCard
+                                                icon={Gem}
+                                                title="Más de $50,000 USD"
+                                                subtitle="Inversionista institucional o HNW."
+                                                selected={formData.capital === 'Más de $50,000'}
+                                                onClick={() => handleSelection('capital', 'Más de $50,000')}
+                                                specialIconStyle={true}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* STEP 4: IDENTITY */}
+                                {step === 4 && (
+                                    <div className="space-y-6 animate-slide-up-fade">
+                                        {formData.capital.includes('50,000') || formData.capital.includes('10,000') ? (
+                                            <div className="text-center mb-2">
+                                                <span className="inline-block bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full border border-green-500/30">
+                                                    Perfil Premium Detectado
+                                                </span>
+                                            </div>
+                                        ) : null}
+
+                                        <div className="space-y-5">
+                                            <div className="group">
+                                                <label className="block text-gray-400 text-xs uppercase tracking-widest font-bold mb-2 group-focus-within:text-amber-500 transition-colors">Nombre y Apellido</label>
+                                                <div className="relative">
+                                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-amber-500 transition-colors" size={18} />
+                                                    <input
+                                                        type="text"
+                                                        name="name"
+                                                        autoFocus
+                                                        required
+                                                        placeholder="Ej: Juan Pérez"
+                                                        value={formData.name}
+                                                        onChange={handleChange}
+                                                        className="w-full bg-zinc-900/50 border border-white/10 rounded-xl p-4 pl-12 text-white focus:border-amber-500 focus:outline-none focus:bg-zinc-900 focus:ring-1 focus:ring-amber-500/50 focus:shadow-[0_0_15px_rgba(245,158,11,0.1)] transition-all placeholder:text-gray-700"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="group">
+                                                <label className="block text-gray-400 text-xs uppercase tracking-widest font-bold mb-2 group-focus-within:text-amber-500 transition-colors">WhatsApp (Incluye Código de País)</label>
+                                                <div className="flex bg-zinc-900/50 border border-white/10 rounded-xl overflow-hidden focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500/50 focus-within:shadow-[0_0_15px_rgba(245,158,11,0.1)] transition-all">
+                                                    <div className="bg-white/5 border-r border-white/10 px-4 flex items-center justify-center text-gray-400 font-mono text-lg select-none group-focus-within:text-amber-500 group-focus-within:bg-amber-500/10 transition-colors">
+                                                        +
+                                                    </div>
+                                                    <input
+                                                        type="tel"
+                                                        name="phone"
+                                                        required
+                                                        placeholder="595981123321"
+                                                        value={formData.phone}
+                                                        onChange={handlePhoneChange}
+                                                        className="w-full bg-transparent border-none p-4 text-white focus:ring-0 focus:outline-none placeholder:text-gray-700 font-mono text-lg"
+                                                    />
+                                                </div>
+
+                                                <div className="mt-3 flex items-start gap-2 text-[10px] text-gray-500 opacity-80">
+                                                    <Lock size={12} className="text-amber-500/60 mt-0.5 shrink-0" />
+                                                    <p>
+                                                        Solo contactamos perfiles que cumplen con los requisitos mínimos de capital.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleNext}
+                                            disabled={!formData.name || formData.phone.length < 10}
+                                            className="w-full mt-4 gold-gradient-bg text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg transform active:scale-[0.98]"
+                                        >
+                                            Continuar <ChevronRight size={20} />
+                                        </button>
+                                    </div>
+                                )}
+
+                                {/* STEP 5: GOAL & SUBMIT */}
+                                {step === 5 && (
+                                    <div className="space-y-6 animate-slide-up-fade">
+
+                                        <div>
+                                            <label className="block text-gray-400 text-sm font-medium mb-3">
+                                                ¿Cuál es tu objetivo con el bot en los próximos 12 meses?
+                                            </label>
+                                            <textarea
+                                                name="goal"
+                                                required
+                                                rows={3}
+                                                placeholder="Ej: Generar ingresos pasivos de $2k/mes, crecer mi capital 30%, diversificar mi portafolio..."
+                                                value={formData.goal}
+                                                onChange={handleChange}
+                                                className="w-full bg-zinc-900/50 border border-white/10 rounded-xl p-4 text-white focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/50 transition-all placeholder:text-gray-700 resize-none text-base"
+                                            />
+                                        </div>
+
+                                        <div className="bg-amber-500/5 border border-amber-500/20 p-4 rounded-xl flex items-start gap-3">
+                                            <div className="mt-1">
+                                                <Clock size={16} className="text-amber-500" />
+                                            </div>
+                                            <p className="text-amber-200/80 text-xs leading-relaxed">
+                                                <strong>Licencias Limitadas:</strong> Solo activamos 10 nuevas licencias por mes para garantizar soporte premium. Tu solicitud entra en la cola prioritaria.
+                                            </p>
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            disabled={isSubmitting || !formData.goal}
+                                            className="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-black font-bold py-5 rounded-xl shadow-[0_10px_30px_-10px_rgba(245,158,11,0.4)] hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale text-lg btn-shimmer"
+                                        >
+                                            {isSubmitting ? (
+                                                <>
+                                                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                                                    Procesando Solicitud...
+                                                </>
+                                            ) : (
+                                                <>SOLICITAR LICENCIA ANUAL <ChevronRight size={20} strokeWidth={3} /></>
+                                            )}
+                                        </button>
+                                    </div>
+                                )}
+                            </form>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
