@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- NOTA: Reemplaza 'https://fenixacademy.com' con tu dominio real -->
+ 
   <url>
-    <loc>https://fenixacademy.com/</loc>
-    <lastmod>2024-05-20</lastmod>
+    <loc>https://fenixtradingacademy.com/</loc>
+    <lastmod>2026-01-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://fenixacademy.com/privacidad</loc>
-    <lastmod>2024-05-20</lastmod>
+    <loc>https://fenixtradingacademy.com/vsl</loc>
+    <lastmod>2026-01-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://fenixtradingacademy.com/ai</loc>
+    <lastmod>2026-01-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://fenixtradingacademy.com/privacidad</loc>
+    <lastmod>2026-01-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://fenixacademy.com/terminos</loc>
-    <lastmod>2024-05-20</lastmod>
+    <loc>https://fenixtradingacademy.com/terminos</loc>
+    <lastmod>2026-01-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

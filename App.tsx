@@ -19,7 +19,7 @@ const TheStack = lazyLoad(import('./components/TheStack'), 'TheStack');
 const SocialProof = lazyLoad(import('./components/SocialProof'), 'SocialProof');
 const Pricing = lazyLoad(import('./components/Pricing'), 'Pricing');
 const FAQ = lazyLoad(import('./components/FAQ'), 'FAQ');
-const Footer = lazyLoad(import('./components/Footer'), 'Footer');
+import { Footer } from './components/Footer';
 const RevealOnScroll = lazyLoad(import('./components/RevealOnScroll'), 'RevealOnScroll');
 const WhoIsThisFor = lazyLoad(import('./components/WhoIsThisFor'), 'WhoIsThisFor');
 const Guarantee = lazyLoad(import('./components/Guarantee'), 'Guarantee');
@@ -31,7 +31,7 @@ const TermsConditions = lazyLoad(import('./pages/LegalPages'), 'TermsConditions'
 
 // Loading Fallback Component
 const LoadingSpinner = () => (
-  <div className="py-20 flex justify-center items-center bg-black">
+  <div className="py-20 flex justify-center items-center bg-black animate-fade-in transition-opacity duration-500">
     <div className="w-8 h-8 border-4 border-amber-900 border-t-amber-500 rounded-full animate-spin"></div>
   </div>
 );
