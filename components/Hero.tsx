@@ -142,11 +142,11 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
             <video
               ref={videoRef}
               className="w-full h-full object-cover"
-              muted={true}
+              muted={isMuted}
               playsInline
-              loop={!isPlaying} // Loop when in background mode
-              controls={!isMuted} // Show controls only when watching for real
-              onClick={handlePlayClick}
+              loop={isMuted} // Loop only when muted (ambient mode)
+              controls={!isMuted} // Show native controls once unmuted
+              onClick={isMuted ? handlePlayClick : undefined} // Only custom click for first engagement
             />
 
             {/* Overlay - Only visible if muted */}

@@ -18,9 +18,52 @@ const StatCard = ({ icon: Icon, value, label }: { icon: any, value: string, labe
     </div>
 );
 
-const MinimalVideo = ({ src, name, label }: { src: string, name: string, label: string }) => {
+const VideoModal = ({ src, isOpen, onClose }: { src: string, isOpen: boolean, onClose: () => void }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        if (isOpen && videoRef.current) {
+            const video = videoRef.current;
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(src);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = src;
+                video.play();
+            }
+        }
+    }, [isOpen, src]);
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/95 backdrop-blur-sm" onClick={onClose} />
+            <div className="relative w-full max-w-4xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 z-50 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-md transition-colors"
+                >
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <video
+                    ref={videoRef}
+                    className="w-full h-full"
+                    controls
+                    playsInline
+                    autoPlay
+                />
+            </div>
+        </div>
+    );
+};
+
+const MinimalVideo = ({ src, name, label, onEnlarge }: { src: string, name: string, label: string, onEnlarge: (src: string) => void }) => {
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -35,34 +78,27 @@ const MinimalVideo = ({ src, name, label }: { src: string, name: string, label: 
         }
     }, [src]);
 
-    const togglePlay = () => {
-        if (!videoRef.current) return;
-        if (videoRef.current.paused) {
-            videoRef.current.play();
-            setIsPlaying(true);
-        } else {
-            videoRef.current.pause();
-            setIsPlaying(false);
-        }
-    };
-
     return (
         <div className="flex flex-col gap-3">
-            <div className="relative rounded-xl overflow-hidden bg-[#0A0A0A] aspect-video w-full group cursor-pointer border border-white/5 shadow-lg" onClick={togglePlay}>
+            <div
+                className="relative rounded-xl overflow-hidden bg-[#0A0A0A] aspect-video w-full group cursor-pointer border border-white/5 shadow-lg"
+                onClick={() => onEnlarge(src)}
+            >
                 <video
                     ref={videoRef}
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                    className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500"
+                    muted
                     playsInline
                     loop
+                    onMouseOver={(e) => (e.target as HTMLVideoElement).play()}
+                    onMouseOut={(e) => (e.target as HTMLVideoElement).pause()}
                 />
 
-                {!isPlaying && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
-                        <div className="w-14 h-14 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white group-hover:scale-105 group-hover:border-amber-500/50 group-hover:text-amber-500 transition-all duration-300">
-                            <Play size={20} className="fill-current ml-1" />
-                        </div>
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors">
+                    <div className="w-12 h-12 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white group-hover:scale-110 group-hover:border-amber-500/50 group-hover:text-amber-500 transition-all duration-300">
+                        <Play size={18} className="fill-current ml-1" />
                     </div>
-                )}
+                </div>
             </div>
             <div className="px-1">
                 <h4 className="text-white font-medium text-sm">{name}</h4>
@@ -88,6 +124,8 @@ const MinimalReview = ({ quote, author, location }: { quote: string, author: str
 // --- MAIN COMPONENT ---
 
 export const SocialProof: React.FC = () => {
+    const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
     return (
         <section className="pt-8 pb-24 md:pt-12 bg-[#020202] relative border-b border-white/5">
             <div className="max-w-6xl mx-auto px-4 relative z-10">
@@ -132,24 +170,35 @@ export const SocialProof: React.FC = () => {
                             name="Jessica"
                             label="Estudiante Fénix"
                             src="https://content.apisystem.tech/hls/medias/9bdho5l9zKdBthtXqzaL/media/transcoded_videos/cts-c38ddecad4e7faf5_,360,480,720,p.mp4.urlset/master.m3u8"
+                            onEnlarge={setActiveVideo}
                         />
                         <MinimalVideo
                             name="Thiago"
                             label="Trader Fondeado"
                             src="https://content.apisystem.tech/hls/medias/9bdho5l9zKdBthtXqzaL/media/transcoded_videos/cts-507a05526f4043bf_,360,480,720,p.mp4.urlset/master.m3u8"
+                            onEnlarge={setActiveVideo}
                         />
                         <MinimalVideo
                             name="Rolando"
                             label="Fase 2 Superada"
                             src="https://content.apisystem.tech/hls/medias/9bdho5l9zKdBthtXqzaL/media/transcoded_videos/cts-658a3b9669e008ca_,360,480,720,p.mp4.urlset/master.m3u8"
+                            onEnlarge={setActiveVideo}
                         />
                         <MinimalVideo
                             name="Jonathan"
                             label="Estudiante Fénix"
                             src="https://content.apisystem.tech/hls/medias/9bdho5l9zKdBthtXqzaL/media/transcoded_videos/cts-8b45decd1b09cd4e_,360,480,720,p.mp4.urlset/master.m3u8"
+                            onEnlarge={setActiveVideo}
                         />
                     </div>
                 </div>
+
+                {/* Video Lightbox Modal */}
+                <VideoModal
+                    src={activeVideo || ''}
+                    isOpen={!!activeVideo}
+                    onClose={() => setActiveVideo(null)}
+                />
 
                 {/* 3. TEXT REVIEWS (Minimal Typography) */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 border-t border-white/5 pt-16">
