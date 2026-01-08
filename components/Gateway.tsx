@@ -22,7 +22,7 @@ export const Gateway: React.FC = () => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black text-white overflow-hidden font-sans selection:bg-amber-500/30">
+        <div className="fixed inset-0 bg-black text-white overflow-y-auto font-sans selection:bg-amber-500/30">
             {/* Background Texture */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)] pointer-events-none" />
 
@@ -38,10 +38,10 @@ export const Gateway: React.FC = () => {
             </div>
 
             {/* Main Content Portal */}
-            <div className={`relative z-10 w-full h-full flex flex-col items-center justify-center pt-12 md:pt-0 transition-all duration-1000 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+            <div className={`relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-10 pb-20 md:pt-0 md:pb-0 transition-all duration-1000 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
 
                 {/* Branding - Updated to match Footer Identity */}
-                <div className="mb-8 md:mb-16 text-center">
+                <div className="mb-6 md:mb-16 text-center">
                     <h1 className="text-3xl md:text-5xl font-black gold-gradient-text uppercase tracking-tight mb-3 px-4">
                         Fenix Trading Academy
                     </h1>
@@ -57,7 +57,7 @@ export const Gateway: React.FC = () => {
                     {/* Option 1: Edu (Academy) */}
                     <button
                         onClick={() => handleNavigation('/vsl', 'Academy')}
-                        className="group relative flex flex-col items-center gap-6 w-full md:w-80 p-8 rounded-2xl bg-zinc-900/20 hover:bg-zinc-900/80 transition-all duration-500 ease-out border border-white/5 hover:border-amber-500/50 hover:shadow-[0_0_30px_rgba(245,158,11,0.1)] hover:-translate-y-1"
+                        className="group relative flex flex-col items-center gap-4 md:gap-6 w-full md:w-80 p-6 md:p-8 rounded-2xl bg-zinc-900/20 hover:bg-zinc-900/80 transition-all duration-500 ease-out border border-white/5 hover:border-amber-500/50 hover:shadow-[0_0_30px_rgba(245,158,11,0.1)] hover:-translate-y-1"
                     >
                         <div className="text-zinc-400 group-hover:text-amber-400 transition-colors duration-500 scale-100 group-hover:scale-110">
                             <svg className="w-12 h-12 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,7 +85,7 @@ export const Gateway: React.FC = () => {
                     {/* Option 2: Invest (Bot) */}
                     <button
                         onClick={() => handleNavigation('/ai', 'Trading Bot')}
-                        className="group relative flex flex-col items-center gap-6 w-full md:w-80 p-8 rounded-2xl bg-zinc-900/20 hover:bg-zinc-900/80 transition-all duration-500 ease-out border border-white/5 hover:border-amber-500/50 hover:shadow-[0_0_30px_rgba(245,158,11,0.1)] hover:-translate-y-1"
+                        className="group relative flex flex-col items-center gap-4 md:gap-6 w-full md:w-80 p-6 md:p-8 rounded-2xl bg-zinc-900/20 hover:bg-zinc-900/80 transition-all duration-500 ease-out border border-white/5 hover:border-amber-500/50 hover:shadow-[0_0_30px_rgba(245,158,11,0.1)] hover:-translate-y-1"
                     >
                         {/* Cyan hue removed to match Gold/Amber Fenix aesthetic */}
                         <div className="absolute inset-0 bg-amber-500/0 group-hover:bg-amber-500/5 transition-colors duration-500 pointer-events-none rounded-2xl" />
@@ -113,7 +113,7 @@ export const Gateway: React.FC = () => {
             </div>
 
             {/* Footer minimal - UPDATED WITH BRIGHT IDEA CREDIT */}
-            <div className="absolute bottom-6 left-0 w-full text-center space-y-2 pointer-events-none z-20">
+            <div className="absolute bottom-6 left-0 w-full text-center space-y-1 pointer-events-none z-20 pb-4 md:pb-0">
                 <p className="text-[10px] text-zinc-600 tracking-[0.3em] uppercase">Selecciona Tu Camino</p>
                 <a
                     href="https://thebrightidea.ai"
