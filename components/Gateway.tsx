@@ -112,8 +112,8 @@ export const Gateway: React.FC = () => {
                 </div>
 
                 {/* Footer minimal - UPDATED TO BE IN FLOW ON MOBILE */}
-                <div className="mt-8 md:mt-16 mb-8 text-center space-y-2 relative z-20">
-                    <p className="text-[10px] text-zinc-600 tracking-[0.3em] uppercase">Selecciona Tu Camino</p>
+                <div className="mt-4 md:mt-8 mb-8 text-center space-y-8 relative z-20">
+                    <p className="text-[10px] text-zinc-600 tracking-[0.3em] uppercase italic">Elegí Tu Camino</p>
                     <a
                         href="https://thebrightidea.ai"
                         target="_blank"
