@@ -46,6 +46,11 @@ export const Footer: React.FC = () => {
 
         {/* Brand Identity */}
         <div className="mb-8">
+          <img
+            src="/assets/logofenix.jpeg"
+            alt="Fenix Logo"
+            className="w-20 h-20 md:w-28 md:h-28 mx-auto mb-6 rounded-full border border-amber-500/20 shadow-[0_0_25px_rgba(245,158,11,0.15)]"
+          />
           <h2 className="text-2xl md:text-3xl font-black text-amber-500 uppercase tracking-tight mb-2">
             Fenix Trading Academy
           </h2>

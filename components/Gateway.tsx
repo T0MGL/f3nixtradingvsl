@@ -42,6 +42,11 @@ export const Gateway: React.FC = () => {
 
                 {/* Branding - Updated to match Footer Identity */}
                 <div className="mb-6 md:mb-16 text-center">
+                    <img 
+                        src="/assets/logofenix.jpeg" 
+                        alt="Fenix Trading Academy Logo" 
+                        className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6 rounded-full border-2 border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.2)] animate-fade-in"
+                    />
                     <h1 className="text-3xl md:text-5xl font-black gold-gradient-text uppercase tracking-tight mb-3 px-4">
                         Fenix Trading Academy
                     </h1>

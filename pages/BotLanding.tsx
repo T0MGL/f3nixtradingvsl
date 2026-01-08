@@ -55,8 +55,12 @@ export const BotLanding: React.FC = () => {
 
             {/* Navigation - Transparent & Premium */}
             <nav className="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent backdrop-blur-sm">
-                <div className="flex items-center gap-2">
-                    <div className="w-2 h-8 bg-amber-500 rounded-sm"></div>
+                <div className="flex items-center gap-3">
+                    <img
+                        src="/assets/logofenix.jpeg"
+                        alt="Fenix Logo"
+                        className="w-10 h-10 rounded-full border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                    />
                     <div className="text-xl tracking-[0.1em] font-bold uppercase text-white">Fenix<span className="font-light text-amber-500">Auto</span></div>
                 </div>
                 <button

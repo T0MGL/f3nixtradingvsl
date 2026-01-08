@@ -113,6 +113,14 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-amber-900/20 blur-[120px] rounded-full pointer-events-none mix-blend-screen animate-breathe" />
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
+        {/* Logo Branding */}
+        <div className="mb-8 animate-fade-in">
+          <img
+            src="/assets/logofenix.jpeg"
+            alt="Fenix Logo"
+            className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full border border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.2)]"
+          />
+        </div>
 
         {/* H1 Headline */}
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-8 tracking-tight animate-slide-up-fade min-h-[3.3em] md:min-h-[2.2em]">
