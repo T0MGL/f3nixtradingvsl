@@ -110,20 +110,20 @@ export const Gateway: React.FC = () => {
                     </button>
 
                 </div>
-            </div>
 
-            {/* Footer minimal - UPDATED WITH BRIGHT IDEA CREDIT */}
-            <div className="absolute bottom-6 left-0 w-full text-center space-y-1 pointer-events-none z-20 pb-4 md:pb-0">
-                <p className="text-[10px] text-zinc-600 tracking-[0.3em] uppercase">Selecciona Tu Camino</p>
-                <a
-                    href="https://thebrightidea.ai"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors pointer-events-auto opacity-70 hover:opacity-100"
-                >
-                    Desarrollado por Bright Idea
-                </a>
+                {/* Footer minimal - UPDATED TO BE IN FLOW ON MOBILE */}
+                <div className="mt-8 md:mt-16 mb-8 text-center space-y-2 relative z-20">
+                    <p className="text-[10px] text-zinc-600 tracking-[0.3em] uppercase">Selecciona Tu Camino</p>
+                    <a
+                        href="https://thebrightidea.ai"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-block text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors opacity-70 hover:opacity-100"
+                    >
+                        Desarrollado por Bright Idea
+                    </a>
+                </div>
             </div>
-        </div >
+        </div>
     );
 };
