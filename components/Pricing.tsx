@@ -92,7 +92,7 @@ export const Pricing: React.FC<PricingProps> = ({ onCtaClick }) => {
                         <h3 className="text-2xl text-gray-300 mb-2">Sistema Fenix Completo + Bonos</h3>
                         <div className="flex items-center justify-center gap-4">
                             <span className="text-4xl text-gray-600 line-through">$1,500</span>
-                            <span className="text-6xl md:text-8xl font-black text-white tracking-tighter">$327</span>
+                            <span className="text-6xl md:text-8xl font-black text-white tracking-tighter">$227</span>
                         </div>
                         <p className="text-green-500 font-medium mt-2">Pago Único. 12 Meses de Mentoría.</p>
                     </div>

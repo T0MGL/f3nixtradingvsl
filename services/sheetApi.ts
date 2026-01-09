@@ -13,7 +13,7 @@ export interface Lead {
     capital: string;
     time: string;
     goal: string;
-    offer: string; // Nuevo campo: 'Standard $327' o 'Downsell $127'
+    offer: string; // Nuevo campo: 'Standard $227' o 'Downsell $127'
     status: 'cold' | 'warm' | 'hot';
     contacted?: boolean;
     converted?: boolean;
@@ -85,7 +85,7 @@ export const getLeads = async (): Promise<Lead[]> => {
             // Aseguramos que status sea uno válido
             status: ['hot', 'warm', 'cold'].includes(item.status) ? item.status : 'cold',
             // Default offer si no existe
-            offer: item.offer || 'Standard $327',
+            offer: item.offer || 'Standard $227',
             // Convertimos valores de Sheets a Booleans reales
             contacted: item.contacted === true || item.contacted === "TRUE",
             converted: item.converted === true || item.converted === "TRUE",
