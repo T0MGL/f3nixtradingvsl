@@ -1,7 +1,8 @@
 // services/sheetApi.ts
 
 // URL de producción conectada a tu Google Sheet
-const SCRIPT_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL;
+// Usamos .trim() para evitar errores si hay espacios accidentales en el .env
+const SCRIPT_URL = (import.meta.env.VITE_GOOGLE_SHEETS_URL || "").trim();
 
 export interface Lead {
     id: string;
@@ -23,6 +24,10 @@ export interface Lead {
 // Helper para enviar datos al script
 const postToSheet = async (payload: any) => {
     try {
+        if (!SCRIPT_URL) {
+            console.error("GOOGLE_SHEETS_URL is not defined");
+            return false;
+        }
         await fetch(SCRIPT_URL, {
             method: 'POST',
             body: JSON.stringify(payload),
@@ -73,9 +78,19 @@ export const submitLead = async (data: Omit<Lead, 'id' | 'date' | 'status' | 'co
 
 export const getLeads = async (): Promise<Lead[]> => {
     try {
+        if (!SCRIPT_URL) {
+            console.error("GOOGLE_SHEETS_URL is not defined");
+            return [];
+        }
+
         // AGREGADO: ?t=${new Date().getTime()}
         // Esto evita que el navegador use la memoria caché y fuerza una descarga real de los datos nuevos.
         const response = await fetch(`${SCRIPT_URL}?t=${new Date().getTime()}`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch leads: ${response.status} ${response.statusText}`);
+        }
+
         const data = await response.json();
 
         // Google Sheets devuelve strings ("TRUE", "FALSE") o booleanos dependiendo de la celda.
