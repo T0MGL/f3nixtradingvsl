@@ -115,7 +115,7 @@ export const TheStack: React.FC = () => {
                     <p className="text-gray-500 text-xs md:text-sm uppercase tracking-widest mb-4 font-semibold">Valor Total del Ecosistema</p>
                     <div className="flex flex-col md:flex-row justify-center items-center md:items-baseline gap-3 md:gap-6">
                         <span className="text-4xl md:text-4xl text-gray-700 line-through decoration-gray-600 decoration-2 font-light decoration-from-font">$2,485</span>
-                        <span className="text-6xl md:text-7xl font-black text-white leading-none">$227 USD</span>
+                        <span className="text-6xl md:text-7xl font-black text-white leading-none">$327 USD</span>
                     </div>
                     <p className="text-amber-500 font-medium mt-6 text-sm md:text-base">Pago único. Acceso ilimitado por 1 Año.</p>
                 </div>

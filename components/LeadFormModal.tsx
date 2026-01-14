@@ -89,7 +89,7 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
     // Downsell Logic with Exit Confirmation
     const [showExitConfirmation, setShowExitConfirmation] = useState(false);
     const [showDownsell, setShowDownsell] = useState(false);
-    const [offerType, setOfferType] = useState<'Standard $227' | 'Downsell $127'>('Standard $227');
+    const [offerType, setOfferType] = useState<'Standard $327' | 'Downsell $127'>('Standard $327');
 
     const TOTAL_STEPS = 5;
 
@@ -110,7 +110,7 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
             setIsAnalyzing(false);
             setShowExitConfirmation(false);
             setShowDownsell(false);
-            setOfferType('Standard $227');
+            setOfferType('Standard $327');
             setFormData({ name: '', phone: '', experience: '', capital: '', time: '', goal: '' });
         }
     }, [isOpen]);
@@ -210,12 +210,12 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
             // IMPORTANTE: Al enviar el valor, habilitamos la optimización de ROAS en Meta.
             // Esto ayuda al algoritmo a distinguir entre clientes de alto valor.
 
-            const purchaseValue = offerType === 'Downsell $127' ? 127.00 : 227.00;
+            const purchaseValue = offerType === 'Downsell $127' ? 127.00 : 327.00;
 
             trackEvent('Purchase', {
                 value: purchaseValue,
                 currency: 'USD',
-                content_name: offerType, // Ej: 'Standard $227'
+                content_name: offerType, // Ej: 'Standard $327'
                 content_type: 'product', // Requerido para Dynamic Ads
                 num_items: 1,
 
@@ -360,7 +360,7 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
                                     {/* Pricing */}
                                     <div className="flex items-center justify-center gap-4 mb-6">
                                         <div className="relative">
-                                            <span className="text-3xl text-gray-600 font-bold">$227</span>
+                                            <span className="text-3xl text-gray-600 font-bold">$327</span>
                                             {/* Red strike line */}
                                             <div className="absolute top-1/2 left-0 w-full h-[2px] bg-red-600/80 -rotate-12 transform"></div>
                                         </div>
@@ -426,7 +426,7 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
 
                                 {/* CONFIRMACIÓN DE PRECIO */}
                                 <div className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-gray-400 mb-4">
-                                    Precio Congelado: <span className={offerType === 'Downsell $127' ? 'text-red-400 font-bold' : 'text-amber-400 font-bold'}>{offerType === 'Downsell $127' ? '$127 USD' : '$227 USD'}</span>
+                                    Precio Congelado: <span className={offerType === 'Downsell $127' ? 'text-red-400 font-bold' : 'text-amber-400 font-bold'}>{offerType === 'Downsell $127' ? '$127 USD' : '$327 USD'}</span>
                                 </div>
 
                                 <div className="bg-white/5 rounded-xl p-4 mb-6 border border-white/10 text-left">

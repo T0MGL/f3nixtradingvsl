@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /crm
-
-# Reemplaza con tu dominio real
-Sitemap: https://fenixtradingacademy.com/sitemap.xml

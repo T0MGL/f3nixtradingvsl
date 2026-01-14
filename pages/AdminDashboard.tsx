@@ -207,7 +207,7 @@ export const AdminDashboard: React.FC = () => {
 
             // Product Filter
             if (productFilter === 'curso') {
-                matchesProduct = lead.offer === 'Standard $227' || lead.offer === 'Downsell $127';
+                matchesProduct = lead.offer === 'Standard $327' || lead.offer === 'Downsell $127';
             } else if (productFilter === 'bot') {
                 matchesProduct = lead.offer?.includes('AI Bot') || lead.offer?.includes('Bot') || lead.offer === 'AI Bot $997';
             }
@@ -225,7 +225,7 @@ export const AdminDashboard: React.FC = () => {
     const stats = useMemo(() => {
         const activeLeads = filteredLeads.filter(l => !l.lost);
         const total = filteredLeads.length;
-        const STANDARD_PRICE = 227;
+        const STANDARD_PRICE = 327;
         const DOWNSELL_PRICE = 127;
 
         const hotCount = activeLeads.filter(l => l.status === 'hot').length;
@@ -526,7 +526,7 @@ export const AdminDashboard: React.FC = () => {
                         subtext="Cash Flow (Ventas Cerradas)"
                         icon={CheckCircle}
                         colorClass="text-green-500 bg-green-500"
-                        tooltip="Dinero real generado hasta el momento basado en los leads que has marcado manualmente como 'Pagado' en la tabla. Considera si pagaron $227 o $127."
+                        tooltip="Dinero real generado hasta el momento basado en los leads que has marcado manualmente como 'Pagado' en la tabla. Considera si pagaron $327 o $127."
                     />
                     <KPICard
                         title="Pipeline Abierto"
@@ -534,7 +534,7 @@ export const AdminDashboard: React.FC = () => {
                         subtext="Potencial en Leads HOT"
                         icon={TrendingUp}
                         colorClass="text-amber-500 bg-amber-500"
-                        tooltip="Dinero que estás dejando sobre la mesa. Es la suma del valor de oferta ($227) de todos los leads calificados como HOT que aún no han comprado."
+                        tooltip="Dinero que estás dejando sobre la mesa. Es la suma del valor de oferta ($327) de todos los leads calificados como HOT que aún no han comprado."
                     />
                 </div>
 
@@ -631,7 +631,7 @@ export const AdminDashboard: React.FC = () => {
                                                         </span>
                                                     ) : (
                                                         <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-500 px-2 py-1 rounded text-xs font-bold border border-amber-500/20 whitespace-nowrap">
-                                                            <Tag size={10} /> $227 (1y)
+                                                            <Tag size={10} /> $327 (1y)
                                                         </span>
                                                     )}
                                                 </td>
