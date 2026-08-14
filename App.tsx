@@ -5,8 +5,6 @@ import { AnnouncementBar } from './components/AnnouncementBar';
 import { LeadFormModal } from './components/LeadFormModal';
 import { StickyCTA } from './components/StickyCTA';
 import { initPixel, trackEvent } from './utils/metaPixel';
-import { Gateway } from './components/Gateway';
-import { BotLanding } from './pages/BotLanding'; // Importing directly as it's a new page
 
 // --- LAZY LOAD COMPONENTS (Performance Optimization) ---
 // We use a helper to handle named exports with React.lazy
@@ -25,6 +23,7 @@ const WhoIsThisFor = lazyLoad(import('./components/WhoIsThisFor'), 'WhoIsThisFor
 const Guarantee = lazyLoad(import('./components/Guarantee'), 'Guarantee');
 
 // Lazy load pages
+const BotLanding = lazyLoad(import('./pages/BotLanding'), 'BotLanding');
 const AdminDashboard = lazyLoad(import('./pages/AdminDashboard'), 'AdminDashboard');
 const PrivacyPolicy = lazyLoad(import('./pages/LegalPages'), 'PrivacyPolicy');
 const TermsConditions = lazyLoad(import('./pages/LegalPages'), 'TermsConditions');
@@ -123,8 +122,9 @@ const App: React.FC = () => {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
-        <Route path="/" element={<Gateway />} />
+        <Route path="/" element={<AcademyPage />} />
         <Route path="/vsl" element={<AcademyPage />} />
+        {/* Bot en pausa: la ruta sigue viva pero no se enlaza desde ningún lado */}
         <Route path="/ai" element={<BotLanding />} />
         <Route path="/crm" element={<AdminDashboard />} />
         <Route path="/privacidad" element={<PrivacyPolicy />} />

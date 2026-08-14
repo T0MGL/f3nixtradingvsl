@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /crm
+Disallow: /ai
 
 # Explicitly allow AI Bots
 User-agent: GPTBot
