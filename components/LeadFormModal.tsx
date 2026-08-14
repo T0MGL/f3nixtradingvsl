@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { X, ChevronRight, CheckCircle, Lock, Smartphone, Brain, TrendingUp, User, ArrowLeft, Target, Clock, Wallet, Coins, Briefcase, Gem, MessageCircle, Info, AlertTriangle, ArrowDown } from 'lucide-react';
 import { submitLead } from '../services/sheetApi';
-import { trackEvent } from '../utils/metaPixel';
+import { trackEvent, trackCustomEvent } from '../utils/metaPixel';
+
+const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/Iv9nGkVl1g31nQeqjykyAw';
 
 interface LeadFormModalProps {
     isOpen: boolean;
@@ -437,14 +439,25 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
                                         Un asesor revisará tus datos: <span className="text-white font-mono block mt-1 bg-black/30 p-2 rounded">+{formData.phone}</span>
                                     </p>
                                 </div>
-                                <p className="text-amber-500 text-xs animate-pulse mb-6 font-bold uppercase tracking-widest">
-                                    ⚠️ Mantente atento a tu WhatsApp
+
+                                <p className="text-amber-500 text-xs mb-4 font-bold uppercase tracking-widest">
+                                    Último paso para asegurar tu cupo
                                 </p>
+                                <a
+                                    href={WHATSAPP_GROUP_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() => trackCustomEvent('JoinWhatsAppGroup', { offer: offerType })}
+                                    className="w-full gold-gradient-bg text-black font-bold py-4 rounded-xl hover:scale-[1.02] active:scale-[0.97] transition-transform duration-200 ease-out shadow-lg flex items-center justify-center gap-2"
+                                >
+                                    <MessageCircle size={20} strokeWidth={2.5} />
+                                    Entrar al grupo de WhatsApp
+                                </a>
                                 <button
                                     onClick={onClose}
-                                    className="w-full gold-gradient-bg text-black font-bold py-4 rounded-xl hover:scale-[1.02] active:scale-95 transition-all shadow-lg"
+                                    className="mt-4 text-gray-500 text-[11px] font-medium hover:text-white transition-colors uppercase tracking-wide"
                                 >
-                                    Entendido, estaré atento
+                                    Ahora no, cerrar
                                 </button>
                             </div>
                         ) : (
