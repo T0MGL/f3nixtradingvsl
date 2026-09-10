@@ -207,7 +207,7 @@ export const AdminDashboard: React.FC = () => {
 
             // Product Filter
             if (productFilter === 'curso') {
-                matchesProduct = lead.offer === 'Standard $327' || lead.offer === 'Downsell $127';
+                matchesProduct = !(lead.offer || '').includes('Bot');
             } else if (productFilter === 'bot') {
                 matchesProduct = lead.offer?.includes('AI Bot') || lead.offer?.includes('Bot') || lead.offer === 'AI Bot $997';
             }
@@ -225,8 +225,6 @@ export const AdminDashboard: React.FC = () => {
     const stats = useMemo(() => {
         const activeLeads = filteredLeads.filter(l => !l.lost);
         const total = filteredLeads.length;
-        const STANDARD_PRICE = 327;
-        const DOWNSELL_PRICE = 127;
 
         const hotCount = activeLeads.filter(l => l.status === 'hot').length;
         const warmCount = activeLeads.filter(l => l.status === 'warm').length;
@@ -235,18 +233,7 @@ export const AdminDashboard: React.FC = () => {
         const convertedCount = filteredLeads.filter(l => l.converted).length;
         const conversionRate = total > 0 ? (convertedCount / total) * 100 : 0;
 
-        // Calcular revenue basado en la oferta real tomada
-        const realRevenue = filteredLeads.filter(l => l.converted).reduce((acc, lead) => {
-            let price = STANDARD_PRICE;
-            if (lead.offer === 'Downsell $127') {
-                price = DOWNSELL_PRICE;
-            } else if (lead.offer?.includes('AI Bot') || lead.offer === 'AI Bot $997') {
-                price = 997;
-            }
-            return acc + price;
-        }, 0);
-
-        const pipelineLeft = activeLeads.filter(l => l.status === 'hot' && !l.converted).length * STANDARD_PRICE;
+        const hotPipeline = activeLeads.filter(l => l.status === 'hot' && !l.converted).length;
 
         return {
             total,
@@ -254,8 +241,8 @@ export const AdminDashboard: React.FC = () => {
             warmCount,
             coldCount,
             conversionRate,
-            realRevenue,
-            pipelineLeft
+            convertedCount,
+            hotPipeline
         };
     }, [filteredLeads]);
 
@@ -521,20 +508,20 @@ export const AdminDashboard: React.FC = () => {
                         tooltip="El porcentaje definitivo de éxito. Mide cuántos de tus leads totales terminan pagando. Un número superior al 5% en tráfico frío es excelente."
                     />
                     <KPICard
-                        title="Ingresos Reales"
-                        value={`$${stats.realRevenue.toLocaleString()}`}
-                        subtext="Cash Flow (Ventas Cerradas)"
+                        title="Ventas Cerradas"
+                        value={`${stats.convertedCount}`}
+                        subtext="Leads marcados como pagados"
                         icon={CheckCircle}
                         colorClass="text-green-500 bg-green-500"
-                        tooltip="Dinero real generado hasta el momento basado en los leads que has marcado manualmente como 'Pagado' en la tabla. Considera si pagaron $327 o $127."
+                        tooltip="Cantidad de leads que marcaste como 'Pagado' en la tabla. El monto lo cierra el asesor en la llamada, por eso el panel cuenta ventas y no dinero."
                     />
                     <KPICard
                         title="Pipeline Abierto"
-                        value={`$${stats.pipelineLeft.toLocaleString()}`}
-                        subtext="Potencial en Leads HOT"
+                        value={`${stats.hotPipeline}`}
+                        subtext="Leads HOT sin cerrar"
                         icon={TrendingUp}
                         colorClass="text-amber-500 bg-amber-500"
-                        tooltip="Dinero que estás dejando sobre la mesa. Es la suma del valor de oferta ($327) de todos los leads calificados como HOT que aún no han comprado."
+                        tooltip="Leads calificados como HOT que todavía no compraron. Son las llamadas con mayor probabilidad de cierre esta semana."
                     />
                 </div>
 
@@ -629,9 +616,13 @@ export const AdminDashboard: React.FC = () => {
                                                         <span className="inline-flex items-center gap-1 bg-red-500/10 text-red-500 px-2 py-1 rounded text-xs font-bold border border-red-500/20 whitespace-nowrap">
                                                             <Tag size={10} /> $127 (2m)
                                                         </span>
-                                                    ) : (
+                                                    ) : lead.offer === 'Standard $327' ? (
                                                         <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-500 px-2 py-1 rounded text-xs font-bold border border-amber-500/20 whitespace-nowrap">
                                                             <Tag size={10} /> $327 (1y)
+                                                        </span>
+                                                    ) : (
+                                                        <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-500 px-2 py-1 rounded text-xs font-bold border border-amber-500/20 whitespace-nowrap">
+                                                            <Tag size={10} /> Llamada
                                                         </span>
                                                     )}
                                                 </td>

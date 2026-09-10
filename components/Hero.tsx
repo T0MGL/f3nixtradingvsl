@@ -182,7 +182,7 @@ export const Hero: React.FC<HeroProps> = ({ onCtaClick }) => {
             className="gold-gradient-bg btn-shimmer text-black text-lg md:text-xl font-bold py-5 px-12 rounded shadow-[0_10px_30px_-10px_rgba(245,158,11,0.2)] hover:shadow-[0_20px_50px_-10px_rgba(245,158,11,0.4)] hover:-translate-y-1 active:scale-95 active:shadow-none transition-all duration-200 w-full md:w-auto flex items-center justify-center gap-3 tracking-tight ease-out touch-manipulation"
           >
             <BarChart3 size={22} className="opacity-80" />
-            INICIAR MI CARRERA COMO TRADER
+            AGENDA TU LLAMADA
           </button>
 
         </div>

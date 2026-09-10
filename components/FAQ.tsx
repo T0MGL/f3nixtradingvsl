@@ -50,11 +50,11 @@ export const FAQ: React.FC = () => {
         },
         {
             question: "¿Es un pago único o una mensualidad?",
-            answer: "Es un pago único. No hay mensualidades, ni cargos sorpresas, ni renovaciones automáticas. Con tu inscripción de hoy aseguras acceso completo por 1 año a todo el ecosistema Fenix (Mentoria, Comunidad, Clases y Herramientas)."
+            answer: "Es un pago único. No hay mensualidades, ni cargos sorpresas, ni renovaciones automáticas. El asesor te explica el plan completo en la llamada, y con tu inscripción aseguras acceso por 1 año a todo el ecosistema Fenix (Mentoría, Comunidad, Clases y Herramientas)."
         },
         {
-            question: "¿Cuándo recibo el acceso al curso después de pagar?",
-            answer: "De inmediato. El sistema es automático. Unos minutos después de confirmar tu pago, recibirás un correo electrónico con tus credenciales de acceso para entrar a la plataforma de alumnos y comenzar tu formación hoy mismo."
+            question: "¿Cómo sigue el proceso después de agendar la llamada?",
+            answer: "Un asesor te contacta por WhatsApp para coordinar el horario. En esa llamada revisamos tu perfil, tus objetivos y resolvemos tus dudas. Si entras al programa, recibes tus credenciales de acceso a la plataforma de alumnos el mismo día."
         }
     ];
 

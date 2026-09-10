@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, ArrowRight, Lock, Clock, CreditCard, ShieldCheck, Headset } from 'lucide-react';
+import { Check, ArrowRight, CalendarCheck, Clock, ShieldCheck, Headset } from 'lucide-react';
 
 interface PricingProps {
     onCtaClick: () => void;
@@ -54,7 +54,7 @@ export const Pricing: React.FC<PricingProps> = ({ onCtaClick }) => {
                 <div className="flex flex-col items-center mb-12">
                     <div className="flex items-center gap-2 text-red-500 text-xs font-bold uppercase tracking-widest mb-4 bg-red-500/5 px-3 py-1 rounded-full border border-red-500/10 animate-pulse">
                         <Clock size={12} />
-                        La oferta termina en
+                        Los cupos de esta semana cierran en
                     </div>
 
                     <div className="flex items-start gap-2 md:gap-4">
@@ -85,24 +85,25 @@ export const Pricing: React.FC<PricingProps> = ({ onCtaClick }) => {
                 {/* Pricing Card */}
                 <div className="glass-panel border-2 border-amber-500 rounded-3xl p-8 md:p-12 relative shadow-[0_0_50px_rgba(245,158,11,0.15)] animate-float">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-500 text-black font-black px-6 py-2 rounded-full uppercase tracking-wider text-sm shadow-lg whitespace-nowrap">
-                        85% OFF - OFERTA FLASH
+                        CUPOS LIMITADOS ESTA SEMANA
                     </div>
 
                     <div className="text-center mb-8">
                         <h3 className="text-2xl text-gray-300 mb-2">Sistema Fenix Completo + Bonos</h3>
-                        <div className="flex items-center justify-center gap-4">
-                            <span className="text-4xl text-gray-600 line-through">$1,500</span>
-                            <span className="text-6xl md:text-8xl font-black text-white tracking-tighter">$327</span>
-                        </div>
-                        <p className="text-green-500 font-medium mt-2">Pago Único. 12 Meses de Mentoría.</p>
+                        <p className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mt-4">
+                            Agenda tu llamada<br className="md:hidden" /> con nuestro equipo
+                        </p>
+                        <p className="text-gray-400 font-light mt-4 max-w-md mx-auto leading-relaxed">
+                            15 minutos con un asesor. Revisamos tu perfil, tus objetivos y armamos tu plan de acceso completo.
+                        </p>
                     </div>
 
                     <button
                         onClick={onCtaClick}
                         className="w-full gold-gradient-bg btn-shimmer text-black text-xl font-bold py-6 rounded-xl shadow-xl flex items-center justify-center gap-3 uppercase mb-6 group hover:shadow-[0_20px_50px_-10px_rgba(245,158,11,0.4)] hover:-translate-y-1 hover:scale-[1.02] active:scale-95 transition-all duration-300 ease-out"
                     >
-                        <Lock size={20} />
-                        DESBLOQUEAR ACCESO
+                        <CalendarCheck size={20} />
+                        AGENDA TU LLAMADA
                         <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                     </button>
 

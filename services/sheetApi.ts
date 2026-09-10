@@ -14,7 +14,7 @@ export interface Lead {
     capital: string;
     time: string;
     goal: string;
-    offer: string; // Nuevo campo: 'Standard $327' o 'Downsell $127'
+    offer: string; // 'Academia (Llamada)', o los labels historicos con precio
     status: 'cold' | 'warm' | 'hot';
     contacted?: boolean;
     converted?: boolean;
@@ -99,8 +99,7 @@ export const getLeads = async (): Promise<Lead[]> => {
             ...item,
             // Aseguramos que status sea uno válido
             status: ['hot', 'warm', 'cold'].includes(item.status) ? item.status : 'cold',
-            // Default offer si no existe
-            offer: item.offer || 'Standard $327',
+            offer: item.offer || 'Academia (Llamada)',
             // Convertimos valores de Sheets a Booleans reales
             contacted: item.contacted === true || item.contacted === "TRUE",
             converted: item.converted === true || item.converted === "TRUE",

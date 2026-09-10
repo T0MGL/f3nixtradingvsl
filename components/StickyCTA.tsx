@@ -42,7 +42,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({ onCtaClick }) => {
             onClick={onCtaClick}
             className="w-full gold-gradient-bg btn-shimmer text-black font-bold py-3 rounded-lg shadow-[0_0_20px_rgba(245,158,11,0.3)] uppercase text-sm hover:scale-105 active:scale-95 transition-transform duration-200 flex items-center justify-center gap-2"
         >
-            SÍ, QUIERO SER RENTABLE HOY
+            AGENDA TU LLAMADA
         </button>
     </div>
   );

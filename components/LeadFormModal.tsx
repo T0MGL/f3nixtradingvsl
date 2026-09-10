@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { X, ChevronRight, CheckCircle, Lock, Smartphone, Brain, TrendingUp, User, ArrowLeft, Target, Clock, Wallet, Coins, Briefcase, Gem, MessageCircle, Info, AlertTriangle, ArrowDown } from 'lucide-react';
+import { X, ChevronRight, CheckCircle, Lock, Smartphone, Brain, TrendingUp, User, ArrowLeft, Target, Clock, Wallet, Coins, Briefcase, Gem, MessageCircle, Info, AlertTriangle } from 'lucide-react';
 import { submitLead } from '../services/sheetApi';
 import { trackEvent, trackCustomEvent } from '../utils/metaPixel';
 
 const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/Iv9nGkVl1g31nQeqjykyAw';
+const OFFER_LABEL = 'Academia (Llamada)';
 
 interface LeadFormModalProps {
     isOpen: boolean;
@@ -88,10 +89,7 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
     const [isSuccess, setIsSuccess] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-    // Downsell Logic with Exit Confirmation
     const [showExitConfirmation, setShowExitConfirmation] = useState(false);
-    const [showDownsell, setShowDownsell] = useState(false);
-    const [offerType, setOfferType] = useState<'Standard $327' | 'Downsell $127'>('Standard $327');
 
     const TOTAL_STEPS = 5;
 
@@ -111,8 +109,6 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
             setIsSuccess(false);
             setIsAnalyzing(false);
             setShowExitConfirmation(false);
-            setShowDownsell(false);
-            setOfferType('Standard $327');
             setFormData({ name: '', phone: '', experience: '', capital: '', time: '', goal: '' });
         }
     }, [isOpen]);
@@ -153,44 +149,21 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
         }
     };
 
-    // --- TWO-STEP EXIT FLOW: CONFIRMATION THEN DOWNSELL ---
     const handleCloseAttempt = () => {
-        // Si ya compró, o está en el primer paso, cerramos normal
-        if (step === 1 || isSuccess) {
-            onClose();
-            // Si ya mostró confirmación o downsell, cerramos
-        } else if (showExitConfirmation || showDownsell) {
-            onClose();
-            // Ya aceptó el downsell y quiere cerrar
-        } else if (offerType === 'Downsell $127') {
+        if (step === 1 || isSuccess || showExitConfirmation) {
             onClose();
         } else {
-            // PASO 1: Mostrar confirmación primero
             setShowExitConfirmation(true);
         }
     };
 
-    // Usuario confirma que SÍ quiere salir → Mostrar downsell
     const confirmExit = () => {
-        setShowExitConfirmation(false);
-        setShowDownsell(true);
+        onClose();
     };
 
-    // Usuario dice que NO quiere salir (fue accidental) → Volver al formulario
     const cancelExit = () => {
         setShowExitConfirmation(false);
     };
-
-    const acceptDownsell = () => {
-        setOfferType('Downsell $127');
-        setShowDownsell(false);
-        // El usuario se queda en el mismo paso y continua llenando
-    };
-
-    const rejectDownsell = () => {
-        onClose();
-    };
-    // --------------------------------------------
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -199,7 +172,7 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
         const finalData = {
             ...formData,
             phone: `+${formData.phone}`,
-            offer: offerType // Enviamos qué oferta aceptó
+            offer: OFFER_LABEL
         };
 
         const success = await submitLead(finalData);
@@ -208,24 +181,11 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
         if (success) {
             setIsSuccess(true);
 
-            // --- TRACKING PURCHASE (SIMULATED) ---
-            // IMPORTANTE: Al enviar el valor, habilitamos la optimización de ROAS en Meta.
-            // Esto ayuda al algoritmo a distinguir entre clientes de alto valor.
-
-            const purchaseValue = offerType === 'Downsell $127' ? 127.00 : 327.00;
-
-            trackEvent('Purchase', {
-                value: purchaseValue,
-                currency: 'USD',
-                content_name: offerType, // Ej: 'Standard $327'
-                content_type: 'product', // Requerido para Dynamic Ads
-                num_items: 1,
-
-                // Custom Properties (Datos extra útiles para crear audiencias personalizadas luego)
+            trackEvent('Lead', {
+                content_name: OFFER_LABEL,
                 lead_experience: formData.experience,
                 lead_capital: formData.capital
             });
-            // ---------------------
         }
     };
 
@@ -258,33 +218,26 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
 
             <div className="relative w-full max-w-lg flex flex-col max-h-[90vh]">
 
-                {/* Barra de Progreso (Solo si no es éxito, no analizando, y NO mostrando downsell ni confirmación) */}
-                {!isSuccess && !isAnalyzing && !showDownsell && !showExitConfirmation && (
+                {/* Barra de Progreso (Solo si no es éxito, no analizando, y no confirmando salida) */}
+                {!isSuccess && !isAnalyzing && !showExitConfirmation && (
                     <div className="mb-6 flex items-center gap-3 px-1">
                         <div className="flex-1 h-1 bg-zinc-800 rounded-full overflow-hidden">
                             <div
-                                className={`h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(245,158,11,0.5)] ${offerType === 'Downsell $127' ? 'bg-gradient-to-r from-red-600 to-orange-500' : 'bg-gradient-to-r from-amber-600 to-amber-400'}`}
+                                className="h-full bg-gradient-to-r from-amber-600 to-amber-400 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(245,158,11,0.5)]"
                                 style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
                             ></div>
                         </div>
-                        <span className={`text-[10px] font-bold uppercase tracking-widest ${offerType === 'Downsell $127' ? 'text-orange-500' : 'text-amber-500'}`}>Paso {step}/{TOTAL_STEPS}</span>
-                    </div>
-                )}
-
-                {/* INDICADOR DE OFERTA APLICADA (Si aceptó el downsell) */}
-                {offerType === 'Downsell $127' && !isSuccess && !isAnalyzing && !showDownsell && !showExitConfirmation && (
-                    <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold text-center py-2 rounded-t-xl mx-4 mb-[-10px] relative z-0 animate-slide-up-fade">
-                        OFERTA ESPECIAL $127 APLICADA
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-amber-500">Paso {step}/{TOTAL_STEPS}</span>
                     </div>
                 )}
 
                 <div className="bg-[#050505] border border-white/10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,1)] overflow-hidden flex flex-col relative min-h-[480px]">
 
                     {/* Fondo Decorativo */}
-                    <div className={`absolute top-0 right-0 w-64 h-64 blur-[100px] pointer-events-none rounded-full ${showDownsell ? 'bg-red-600/10' : showExitConfirmation ? 'bg-orange-600/10' : 'bg-amber-500/5'}`} />
+                    <div className={`absolute top-0 right-0 w-64 h-64 blur-[100px] pointer-events-none rounded-full ${showExitConfirmation ? 'bg-orange-600/10' : 'bg-amber-500/5'}`} />
 
                     {/* Header del Modal */}
-                    {!isAnalyzing && !isSuccess && !showDownsell && !showExitConfirmation && (
+                    {!isAnalyzing && !isSuccess && !showExitConfirmation && (
                         <div className="flex justify-between items-start p-6 pb-0 relative z-10">
                             <div>
                                 {step > 1 && (
@@ -334,78 +287,6 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
                                     </button>
                                 </div>
                             </div>
-                        ) : showDownsell ? (
-                            <div className="animate-scale-in text-center relative z-20">
-
-                                {/* Header Icon + Text */}
-                                <div className="flex flex-col items-center mb-6">
-                                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/20 shadow-[0_0_30px_rgba(220,38,38,0.2)] mb-4 animate-pulse">
-                                        <AlertTriangle size={36} className="text-red-500" strokeWidth={1.5} />
-                                    </div>
-                                    <h3 className="text-3xl md:text-4xl font-black text-white italic tracking-tight leading-none mb-2">
-                                        ¡ESPERA! NO TE VAYAS AÚN...
-                                    </h3>
-                                    <p className="text-gray-400 text-sm font-light leading-relaxed max-w-xs mx-auto">
-                                        Entiendo que el precio puede ser una barrera. <br />
-                                        <span className="text-white font-medium">Eliminemos esa excusa ahora mismo.</span>
-                                    </p>
-                                </div>
-
-                                {/* Black Card */}
-                                <div className="bg-[#111] border border-white/10 rounded-2xl p-6 mb-8 relative overflow-hidden shadow-2xl">
-
-                                    {/* Title inside card */}
-                                    <div className="text-xs text-gray-500 font-bold uppercase tracking-[0.2em] mb-4 text-center">
-                                        Oferta Única de Retención
-                                    </div>
-
-                                    {/* Pricing */}
-                                    <div className="flex items-center justify-center gap-4 mb-6">
-                                        <div className="relative">
-                                            <span className="text-3xl text-gray-600 font-bold">$327</span>
-                                            {/* Red strike line */}
-                                            <div className="absolute top-1/2 left-0 w-full h-[2px] bg-red-600/80 -rotate-12 transform"></div>
-                                        </div>
-                                        <span className="text-6xl font-black text-white tracking-tighter">$127</span>
-                                    </div>
-
-                                    {/* Divider */}
-                                    <div className="w-full h-px bg-white/5 mb-5"></div>
-
-                                    {/* Checklist */}
-                                    <ul className="space-y-3 text-left max-w-[260px] mx-auto">
-                                        <li className="flex items-start gap-3">
-                                            <CheckCircle size={18} className="text-green-500 shrink-0 mt-0.5" />
-                                            <span className="text-sm text-gray-300 font-medium">Sistema Fenix Completo (Grabado)</span>
-                                        </li>
-                                        <li className="flex items-start gap-3">
-                                            <CheckCircle size={18} className="text-green-500 shrink-0 mt-0.5" />
-                                            <span className="text-sm text-gray-300 font-medium">Blueprint de Fondeo</span>
-                                        </li>
-                                        <li className="flex items-start gap-3">
-                                            <AlertTriangle size={18} className="text-amber-500 shrink-0 mt-0.5" />
-                                            <span className="text-sm text-amber-500 font-bold">Solo 2 Meses de Trading en Vivo</span>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                {/* Buttons */}
-                                <div className="space-y-4">
-                                    <button
-                                        onClick={acceptDownsell}
-                                        className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black py-4 rounded-xl shadow-[0_10px_40px_-10px_rgba(220,38,38,0.5)] hover:scale-[1.02] active:scale-98 transition-all text-base md:text-lg uppercase tracking-wide flex items-center justify-center gap-2 group"
-                                    >
-                                        <ArrowDown size={20} className="group-hover:translate-y-1 transition-transform" strokeWidth={3} />
-                                        Aceptar Oferta por $127
-                                    </button>
-                                    <button
-                                        onClick={rejectDownsell}
-                                        className="text-gray-600 text-[11px] font-medium hover:text-white transition-colors uppercase tracking-wide"
-                                    >
-                                        No gracias, prefiero perder la oportunidad.
-                                    </button>
-                                </div>
-                            </div>
                         ) : isAnalyzing ? (
                             // --- LOADING SCREEN (FOMO) ---
                             <div className="text-center animate-pulse flex flex-col items-center">
@@ -426,11 +307,6 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-2">¡Aplicación Exitosa!</h3>
 
-                                {/* CONFIRMACIÓN DE PRECIO */}
-                                <div className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-gray-400 mb-4">
-                                    Precio Congelado: <span className={offerType === 'Downsell $127' ? 'text-red-400 font-bold' : 'text-amber-400 font-bold'}>{offerType === 'Downsell $127' ? '$127 USD' : '$327 USD'}</span>
-                                </div>
-
                                 <div className="bg-white/5 rounded-xl p-4 mb-6 border border-white/10 text-left">
                                     <p className="text-gray-300 text-sm mb-2">
                                         Hemos reservado tu perfil temporalmente.
@@ -447,7 +323,7 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
                                     href={WHATSAPP_GROUP_URL}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    onClick={() => trackCustomEvent('JoinWhatsAppGroup', { offer: offerType })}
+                                    onClick={() => trackCustomEvent('JoinWhatsAppGroup', { offer: OFFER_LABEL })}
                                     className="w-full gold-gradient-bg text-black font-bold py-4 rounded-xl hover:scale-[1.02] active:scale-[0.97] transition-transform duration-200 ease-out shadow-lg flex items-center justify-center gap-2"
                                 >
                                     <MessageCircle size={20} strokeWidth={2.5} />
@@ -666,15 +542,15 @@ export const LeadFormModal: React.FC<LeadFormModalProps> = ({ isOpen, onClose })
                                         <button
                                             type="submit"
                                             disabled={isSubmitting || !formData.goal}
-                                            className={`w-full text-black font-bold py-5 rounded-xl shadow-[0_10px_30px_-10px_rgba(249,115,22,0.4)] hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale text-lg btn-shimmer ${offerType === 'Downsell $127' ? 'bg-gradient-to-r from-red-600 to-orange-500 text-white' : 'bg-gradient-to-r from-orange-500 to-amber-600'}`}
+                                            className="w-full bg-gradient-to-r from-orange-500 to-amber-600 text-black font-bold py-5 rounded-xl shadow-[0_10px_30px_-10px_rgba(249,115,22,0.4)] hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale text-lg btn-shimmer"
                                         >
                                             {isSubmitting ? (
                                                 <>
                                                     <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
-                                                    Confirmando Cupo...
+                                                    Reservando tu llamada...
                                                 </>
                                             ) : (
-                                                <>SOLICITAR ACCESO AHORA <ChevronRight size={20} strokeWidth={3} /></>
+                                                <>AGENDAR MI LLAMADA <ChevronRight size={20} strokeWidth={3} /></>
                                             )}
                                         </button>
                                     </div>

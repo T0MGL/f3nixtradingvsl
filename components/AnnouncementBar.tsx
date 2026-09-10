@@ -26,15 +26,15 @@ export const AnnouncementBar: React.FC = () => {
     },
     { 
       icon: Clock, 
-      text: "OFERTA FLASH:", 
-      highlight: "El descuento del 85% expira automáticamente en breve",
+      text: "AGENDA:", 
+      highlight: "Las llamadas de esta semana se están completando",
       color: "text-amber-400",
       live: true
     },
      { 
       icon: TrendingUp, 
       text: "EN VIVO:", 
-      highlight: "142 personas están revisando esta oferta ahora mismo",
+      highlight: "142 personas están revisando esta formación ahora mismo",
       color: "text-purple-400",
       live: true
     }

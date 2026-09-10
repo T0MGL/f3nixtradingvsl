@@ -35,7 +35,7 @@ const StackItem = ({
                             {title}
                         </h3>
                         <span className="self-start md:self-auto bg-white/5 border border-white/10 px-3 py-1 rounded text-xs text-gray-400 font-mono group-hover:border-amber-500/30 transition-colors">
-                            Valor: {value}
+                            {value}
                         </span>
                     </div>
                     <p className="text-gray-400 text-sm md:text-base leading-relaxed mb-4 font-light">
@@ -70,28 +70,28 @@ export const TheStack: React.FC = () => {
                     <StackItem
                         icon={MonitorPlay}
                         title="Trading Room: 1 AÑO DE CLASES ILIMITADAS"
-                        value="$997 USD"
+                        value="1 AÑO DE ACCESO"
                         description="Esto es lo que nos diferencia. No te damos videos y te abandonamos. Tienes 12 MESES COMPLETOS de acceso a nuestras sesiones operativas en vivo. Conéctate a diario, pregunta, mira nuestras entradas y corrige tus errores en tiempo real."
                     />
 
                     <StackItem
                         icon={BookOpen}
                         title="Sistema 'Algoritmo Bancario' (Grabado)"
-                        value="$497 USD"
+                        value="SISTEMA COMPLETO"
                         description="El 95% del material en YouTube es basura minorista. Aprende a leer la Huella Institucional: Order Blocks, Ineficiencias y Liquidez. Entenderás por qué el precio se mueve y dónde entrar con precisión quirúrgica."
                     />
 
                     <StackItem
                         icon={BrainCircuit}
                         title="Protocolo de Psicotrading de Acero"
-                        value="$297 USD"
+                        value="PROTOCOLO PROPIO"
                         description="El mercado no te vence, te vences tú mismo. Te entregamos nuestro sistema de gestión emocional para eliminar el miedo, la avaricia y el FOMO. Operarás con la frialdad de un algoritmo."
                     />
 
                     <StackItem
                         icon={Users}
                         title="Comunidad Elite & Mentoria Grupal"
-                        value="$197 USD"
+                        value="SOPORTE 24/7"
                         description="Acceso a nuestro Discord privado. Rodéate de otros traders paraguayos que están en tu mismo camino. Soporte 24/7 para revisar tus análisis y corregir errores antes de que te cuesten dinero."
                     />
 
@@ -103,7 +103,7 @@ export const TheStack: React.FC = () => {
                         <StackItem
                             icon={FileCheck}
                             title="BLUEPRINT: MULTIPLICA TU CAPITAL X10"
-                            value="INVALUABLE"
+                            value="BONO EXCLUSIVO"
                             isBonus={true}
                             description="La estrategia definitiva para escalar tu cuenta. Accede a nuestra hoja de ruta exacta para gestionar capitales de 10k, 50k o 100k+ de forma profesional. Te enseñamos cómo operar cuentas grandes con nuestro sistema institucional y quedarte con hasta el 80% de los beneficios. Solo trading real."
                         />
@@ -112,12 +112,11 @@ export const TheStack: React.FC = () => {
 
                 {/* Total Value Summary - OPTIMIZED FOR MOBILE */}
                 <div className="mt-16 text-center">
-                    <p className="text-gray-500 text-xs md:text-sm uppercase tracking-widest mb-4 font-semibold">Valor Total del Ecosistema</p>
-                    <div className="flex flex-col md:flex-row justify-center items-center md:items-baseline gap-3 md:gap-6">
-                        <span className="text-4xl md:text-4xl text-gray-700 line-through decoration-gray-600 decoration-2 font-light decoration-from-font">$2,485</span>
-                        <span className="text-6xl md:text-7xl font-black text-white leading-none">$327 USD</span>
-                    </div>
-                    <p className="text-amber-500 font-medium mt-6 text-sm md:text-base">Pago único. Acceso ilimitado por 1 Año.</p>
+                    <p className="text-gray-500 text-xs md:text-sm uppercase tracking-widest mb-4 font-semibold">El Ecosistema Completo</p>
+                    <p className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight">
+                        Agenda tu llamada<br />con nuestro equipo
+                    </p>
+                    <p className="text-amber-500 font-medium mt-6 text-sm md:text-base">Acceso ilimitado por 1 año. Te lo explicamos en 15 minutos.</p>
                 </div>
 
             </div>
